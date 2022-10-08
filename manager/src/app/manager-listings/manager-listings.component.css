@@ -1,0 +1,40 @@
+.card,
+.card-panel {
+  padding: 15px 20px;
+  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.14);
+}
+
+.container-fluid {
+  padding: 1rem 2.5rem;
+  margin: auto;
+}
+
+.row {
+  margin: 0 -0.75rem;
+}
+
+.main {
+  position: absolute;
+  width: calc(100% - 250px);
+  top: 125px;
+  margin-left: 250px;
+}
+
+.subheader {
+  color: rgba(0, 0, 0, 0.54);
+  font-weight: 500;
+}
+
+/* folders */
+
+.folder {
+  width: 185px;
+  display: inline-block;
+  margin: 15px 20px 15px 0;
+  font-weight: 500;
+}
+
+.folder i {
+  color: rgba(0, 0, 0, 0.54);
+  margin-top: -3px;
+}

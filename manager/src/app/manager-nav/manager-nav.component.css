@@ -1,0 +1,51 @@
+/* sidenav */
+.side-nav.floating {
+  width: 250px;
+  padding: 12px 8px 0 !important;
+  height: calc(100% - 130px);
+  left: initial;
+  right: initial;
+  top: 125px;
+  transform: initial;
+  z-index: auto;
+  margin: 0.5rem 0 1rem 0;
+  border-radius: 2px;
+  background: transparent;
+  box-shadow: none;
+}
+.side-nav .divider {
+  margin: 8px 0;
+}
+.side-nav .active {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+.side-nav .active a {
+  color: #212121;
+  font-weight: 500;
+}
+.side-nav .subheader {
+  line-height: 24px;
+  height: 32px;
+  margin: 0;
+  padding: 4px 16px;
+  color: #616161;
+  font-weight: normal;
+  font-size: 13px;
+}
+.side-nav li > a, .side-nav li > a > i.material-icons {
+  height: 40px;
+  line-height: 40px;
+}
+.side-nav li > a > i.material-icons {
+  margin-right: 24px;
+}
+.side-nav li > a {
+  padding: 0 16px;
+  font-weight: normal;
+  font-size: 13px;
+  color: #616161;
+}
+.side-nav li > a:hover {
+  border-radius: 2px;
+}
+
