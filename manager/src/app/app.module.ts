@@ -6,17 +6,27 @@ import { ManagerHeaderComponent } from './manager-header/manager-header.componen
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ManagerNavComponent } from './manager-nav/manager-nav.component';
 import { ManagerListingsComponent } from './manager-listings/manager-listings.component';
+import { FileUploaderComponent } from './file-uploader/file-uploader.component';
+import {MatInputModule} from "@angular/material/input";
+import {HttpClientModule} from "@angular/common/http"
+import {MatTableModule} from "@angular/material/table";
+import {MatCheckboxModule} from "@angular/material/checkbox";
 
 @NgModule({
   declarations: [
     AppComponent,
     ManagerHeaderComponent,
     ManagerNavComponent,
-    ManagerListingsComponent
+    ManagerListingsComponent,
+    FileUploaderComponent
   ],
   imports: [
     BrowserModule,
-    NoopAnimationsModule
+    NoopAnimationsModule,
+    MatInputModule,
+    HttpClientModule,
+    MatTableModule,
+    MatCheckboxModule
   ],
   providers: [],
   bootstrap: [AppComponent]
