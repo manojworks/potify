@@ -42,3 +42,5 @@ testem.log
 Thumbs.db
 /.editorconfig
 /package-lock.json
+/.vscode/
+/.angular/
