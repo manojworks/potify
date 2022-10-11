@@ -1,0 +1,13 @@
+<div >
+
+  <label >
+    <input  type="file" #fileInput (change)="onFileInput($event)" multiple/>
+  </label>
+
+  <button [disabled]="!selectedFiles" mat-raised-button (click)="fileUpload()">
+    {{ 'Upload Songs' }}
+  </button>
+
+</div>
+
+
