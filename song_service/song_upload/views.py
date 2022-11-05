@@ -30,20 +30,20 @@ class SongsUploadApiView(APIView):
     def post(self, request, *args, **kwargs):
         f_obj = request.FILES['file']
         f_name = f_obj.name
+        # TODO: handle error saving file
         saved_path = file_save(f_name, f_obj)
-        data = {
-            'original_file_name': f_name,
-            'saved_path': saved_path,
-            'error': None
-        }
+
         s = Song()
         s.original_name = f_name
         s.file_path = saved_path
-        # s.created_on = datetime.datetime.now()
-        print("save new song {orig_name} , {file_path} ".format(orig_name=s.original_name, file_path=s.file_path))
+        print("save new song {orig_name} at id {id} with state {state} ".format(orig_name=s.original_name, id=s.uuid, state=s.status))
         s.save()
 
+        data = {
+            'original_file_name': s.original_name,
+            'song_id': s.uuid,
+            'status': s.status,
+            'error': None
+        }
+
         return JsonResponse(data, status=status.HTTP_201_CREATED)
-
-        # ret = Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
