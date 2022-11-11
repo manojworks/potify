@@ -3,7 +3,7 @@
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
       <!-- Checkbox Column -->
-      <ng-container matColumnDef="select">
+      <ng-container matColumnDef="song_id">
         <th mat-header-cell *matHeaderCellDef>
           <mat-checkbox (change)="$event ? toggleAllRows() : null"
                         [checked]="selection.hasValue() && isAllSelected()"
@@ -21,21 +21,21 @@
       </ng-container>
 
       <!-- Title Column -->
-      <ng-container matColumnDef="title">
+      <ng-container matColumnDef="file_name">
         <th mat-header-cell *matHeaderCellDef> Title </th>
-        <td mat-cell *matCellDef="let element"> {{element.title}} </td>
+        <td mat-cell *matCellDef="let element"> {{element.getSongFileName()}} </td>
       </ng-container>
 
       <!-- Status Column -->
-      <ng-container matColumnDef="status">
+      <ng-container matColumnDef="song_status">
         <th mat-header-cell *matHeaderCellDef> Status </th>
-        <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+        <td mat-cell *matCellDef="let element"> {{element.getSongStatus()}} </td>
       </ng-container>
 
       <!-- Attributes Column -->
       <ng-container matColumnDef="attributes">
         <th mat-header-cell *matHeaderCellDef> Attributes </th>
-        <td mat-cell *matCellDef="let element"> {{element.attributes}} </td>
+        <td mat-cell *matCellDef="let element"> {{element.getSongAttributes()}} </td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

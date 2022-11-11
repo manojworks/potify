@@ -1,37 +1,31 @@
-import { Component, OnInit } from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {SelectionModel} from "@angular/cdk/collections";
+import {ManagerListings} from "./manager-listings.model";
+import {ListingService} from "../services/listing/listing.service";
 
-export interface SongDetails {
-  title: string;
-  status: number;
-  attributes: string;
-}
 
-const ELEMENT_DATA: SongDetails[] = [
-  {title: 'Hydrogen', status: 1.0079, attributes: 'H'},
-  {title: 'Helium', status: 4.0026, attributes: 'He'},
-  {title: 'Lithium', status: 6.941, attributes: 'Li'},
-  {title: 'Beryllium', status: 9.0122, attributes: 'Be'},
-  {title: 'Boron', status: 10.811, attributes: 'B'},
-  {title: 'Carbon', status: 12.0107, attributes: 'C'},
-  {title: 'Nitrogen', status: 14.0067, attributes: 'N'},
-  {title: 'Oxygen', status: 15.9994, attributes: 'O'},
-  {title: 'Fluorine', status: 18.9984, attributes: 'F'},
-  {title: 'Neon', status: 20.1797, attributes: 'Ne'},
-];
 
 @Component({
   selector: 'app-manager-listings',
   templateUrl: './manager-listings.component.html',
   styleUrls: ['./manager-listings.component.css']
 })
+
 export class ManagerListingsComponent implements OnInit {
 
-  displayedColumns: string[] = ['select', 'title', 'status', 'attributes'];
-  dataSource = new MatTableDataSource<SongDetails>(ELEMENT_DATA);
-  selection = new SelectionModel<SongDetails>(true, []);
+  displayedColumns: string[] = ['song_id', 'file_name', 'song_status', 'attributes'];
+  dataSource : MatTableDataSource<ManagerListings>;
+  selection = new SelectionModel<ManagerListings>(true, []);
 
+  constructor(private listingService: ListingService, private changeDetectorRefs: ChangeDetectorRef) {
+    this.dataSource = new MatTableDataSource<ManagerListings>();
+  }
+
+  addASong(newSong: ManagerListings) {
+    this.listingService.addASong(newSong)
+    this.changeDetectorRefs.detectChanges();
+  }
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
     const numSelected = this.selection.selected.length;
@@ -50,16 +44,22 @@ export class ManagerListingsComponent implements OnInit {
   }
 
   /** The label for the checkbox on the passed row */
-  checkboxLabel(row?: SongDetails): string {
+  checkboxLabel(row?: ManagerListings): string {
     if (!row) {
       return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
     }
-    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.title + 1}`;
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.getSongId() + 1}`;
   }
 
-  constructor() { }
+
 
   ngOnInit(): void {
+    this.listingService.listingsObservable.subscribe(newManagerListing => {
+      let newEntry = new ManagerListings(newManagerListing.getSongId(), newManagerListing.getSongFileName(), 1, newManagerListing.getSongAttributes())
+      const newData = [ ...this.dataSource.data ];
+      newData.push(newEntry);
+      this.dataSource.data = newData;
+    })
   }
 
 }
