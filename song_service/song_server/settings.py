@@ -130,7 +130,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGGING = {
+LOGGING_DEBUG = {
     'version': 1,
     'disable_existing_loggers': True,
     'formatters': {
@@ -142,7 +142,8 @@ LOGGING = {
         'default': {
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': '/var/log/song_service/song_service.log',
+            #'filename': '/var/log/song_service/song_service.log',
+            'filename': '/home/manoj/potify/song_service/song_service.log',
             'maxBytes': 1024 * 1024 * 5,  # 5 MB
             'backupCount': 5,
             'formatter': 'standard',
@@ -150,7 +151,8 @@ LOGGING = {
         'request_handler': {
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': '/var/log/song_service/django_request.log',
+            #'filename': '/var/log/song_service/django_request.log',
+            'filename': '/home/manoj/potify/song_service/song_service.log',
             'maxBytes': 1024 * 1024 * 5,  # 5 MB
             'backupCount': 5,
             'formatter': 'standard',
@@ -174,3 +176,55 @@ LOGGING = {
         },
     }
 }
+
+LOGGING_PROD = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'formatters': {
+        'standard': {
+            'format': '%(asctime)s %(levelname)s %(name)s %(message)s'
+        },
+    },
+    'handlers': {
+        'default': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            #'filename': '/var/log/song_service/song_service.log',
+            'filename': '/home/manoj/potify/song_service/song_service.log',
+            'maxBytes': 1024 * 1024 * 5,  # 5 MB
+            'backupCount': 5,
+            'formatter': 'standard',
+        },
+        'request_handler': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            #'filename': '/var/log/song_service/django_request.log',
+            'filename': '/home/manoj/potify/song_service/song_service.log',
+            'maxBytes': 1024 * 1024 * 5,  # 5 MB
+            'backupCount': 5,
+            'formatter': 'standard',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['request_handler'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        '': {
+            'handlers': ['default'],
+            'level': 'DEBUG',
+            'propagate': True
+        },
+        'django.request': {  # Stop SQL debug from logging to main logger
+            'handlers': ['request_handler'],
+            'level': 'DEBUG',
+            'propagate': False
+        },
+    }
+}
+
+if DEBUG:
+    LOGGING = LOGGING_DEBUG
+else:
+    LOGGING = LOGGING_PROD
