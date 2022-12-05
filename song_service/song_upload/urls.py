@@ -4,5 +4,5 @@ from .views import (
 )
 
 urlpatterns = [
-    path('api', SongsUploadApiView.as_view()),
+    path('', SongsUploadApiView.as_view()),
 ]

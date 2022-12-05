@@ -13,5 +13,5 @@ class FileUploadTestCase(TestCase):
         formdata = {}
         with open('/home/manoj/potify/song_service/temp/smalljs.mp3', 'rb') as f:
             formdata['file'] = f
-            response = self.client.post('/song-upload/api', data=formdata)
+            response = self.client.post('/upload/', data=formdata)
             self.assertEqual(response.status_code, 201)
