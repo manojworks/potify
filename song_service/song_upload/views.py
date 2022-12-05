@@ -26,10 +26,6 @@ class SongsUploadApiView(APIView):
     # TODO: check for permissions
     # permission_classes = [permissions.IsAuthenticated]
 
-    def get(self, request, *args, **kwargs):
-        print("here....")
-        return Response(status=status.HTTP_202_ACCEPTED)
-
     def post(self, request, *args, **kwargs):
         f_obj = request.FILES['file']
         f_name = f_obj.name
