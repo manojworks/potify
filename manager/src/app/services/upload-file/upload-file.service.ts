@@ -7,7 +7,7 @@ import {Observable} from "rxjs";
 })
 export class UploadFileService {
 
-  private baseUrl = 'http://10.0.0.71/song-upload/api';
+  private baseUrl = 'http://10.0.0.71/upload/';
 
   constructor(private http: HttpClient) { }
 

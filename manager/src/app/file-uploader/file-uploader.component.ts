@@ -40,7 +40,7 @@ export class FileUploaderComponent implements OnInit {
         console.log(this.selectedFiles[ind])
         this.uploadService.upload(this.selectedFiles[ind]).subscribe( resp => {
             this.uploadResult = <IUploadResponse>resp
-            let newSong = new ManagerListings(this.uploadResult.id, this.uploadResult.original_file_name, this.uploadResult.status, null)
+            let newSong = new ManagerListings(this.uploadResult.id, this.uploadResult.original_file_name, this.uploadResult.status, <string[]>[])
             this.listingComponent.addASong(newSong)
           }
         )

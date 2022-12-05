@@ -10,6 +10,8 @@ export class ManagerNavComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    console.log("On page init left nav")
+
   }
 
 }
