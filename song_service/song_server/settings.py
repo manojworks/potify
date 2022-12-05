@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'song_upload',
+    'song_listings',
 ]
 
 MIDDLEWARE = [
@@ -142,7 +143,6 @@ LOGGING_DEBUG = {
         'default': {
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
-            #'filename': '/var/log/song_service/song_service.log',
             'filename': '/home/manoj/potify/song_service/song_service.log',
             'maxBytes': 1024 * 1024 * 5,  # 5 MB
             'backupCount': 5,
@@ -151,7 +151,6 @@ LOGGING_DEBUG = {
         'request_handler': {
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
-            #'filename': '/var/log/song_service/django_request.log',
             'filename': '/home/manoj/potify/song_service/song_service.log',
             'maxBytes': 1024 * 1024 * 5,  # 5 MB
             'backupCount': 5,
@@ -189,8 +188,8 @@ LOGGING_PROD = {
         'default': {
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
-            #'filename': '/var/log/song_service/song_service.log',
-            'filename': '/home/manoj/potify/song_service/song_service.log',
+            'filename': '/var/log/song_service/song_service.log',
+
             'maxBytes': 1024 * 1024 * 5,  # 5 MB
             'backupCount': 5,
             'formatter': 'standard',
@@ -198,8 +197,7 @@ LOGGING_PROD = {
         'request_handler': {
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
-            #'filename': '/var/log/song_service/django_request.log',
-            'filename': '/home/manoj/potify/song_service/song_service.log',
+            'filename': '/var/log/song_service/django_request.log',
             'maxBytes': 1024 * 1024 * 5,  # 5 MB
             'backupCount': 5,
             'formatter': 'standard',
@@ -225,6 +223,6 @@ LOGGING_PROD = {
 }
 
 if DEBUG:
-    LOGGING = LOGGING_DEBUG
+    LOGGING = LOGGING_PROD
 else:
     LOGGING = LOGGING_PROD
