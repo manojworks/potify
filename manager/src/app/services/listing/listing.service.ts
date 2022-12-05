@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {ManagerListings} from "../../manager-listings/manager-listings.model";
-import {Subject} from "rxjs";
+import {Observable, Subject} from "rxjs";
+import {HttpClient} from "@angular/common/http";
 
 
 
@@ -9,10 +10,12 @@ import {Subject} from "rxjs";
 })
 export class ListingService {
 
+  private baseUrl = 'http://10.0.0.71/listings/recent/';
+
   private listingsSubject = new Subject<ManagerListings>();
   listingsObservable = this.listingsSubject.asObservable();
 
-  constructor() {
+  constructor(private http: HttpClient) {
 
   }
 
@@ -20,5 +23,7 @@ export class ListingService {
     this.listingsSubject.next(newSong)
   }
 
-
+  public listRecent(): Observable<ManagerListings[]> {
+    return this.http.get<ManagerListings[]>(this.baseUrl)
+  }
 }

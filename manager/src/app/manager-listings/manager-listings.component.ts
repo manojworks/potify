@@ -54,7 +54,23 @@ export class ManagerListingsComponent implements OnInit {
 
 
   ngOnInit(): void {
+
+    console.log("On page init listings component ")
+    this.listingService.listRecent().subscribe(listingsData => {
+      const newData = [ ...this.dataSource.data ];
+      for (let key in listingsData){
+        let entry = listingsData[key]
+        let newEntry = new ManagerListings(entry['song_id'], entry['file_name'], entry['song_status'], entry['attributes'])
+        newData.push(newEntry);
+      }
+        this.dataSource.data = newData
+      })
+
+
+
+
     this.listingService.listingsObservable.subscribe(newManagerListing => {
+      console.log("On page init subscribe observable")
       let newEntry = new ManagerListings(newManagerListing.getSongId(), newManagerListing.getSongFileName(), 1, newManagerListing.getSongAttributes())
       const newData = [ ...this.dataSource.data ];
       newData.push(newEntry);
