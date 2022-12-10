@@ -11,6 +11,7 @@ import {MatInputModule} from "@angular/material/input";
 import {HttpClientModule} from "@angular/common/http"
 import {MatTableModule} from "@angular/material/table";
 import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatPaginatorModule} from "@angular/material/paginator";
 
 @NgModule({
   declarations: [
@@ -20,14 +21,15 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
     ManagerListingsComponent,
     FileUploaderComponent
   ],
-  imports: [
-    BrowserModule,
-    NoopAnimationsModule,
-    MatInputModule,
-    HttpClientModule,
-    MatTableModule,
-    MatCheckboxModule
-  ],
+    imports: [
+        BrowserModule,
+        NoopAnimationsModule,
+        MatInputModule,
+        HttpClientModule,
+        MatTableModule,
+        MatCheckboxModule,
+        MatPaginatorModule
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

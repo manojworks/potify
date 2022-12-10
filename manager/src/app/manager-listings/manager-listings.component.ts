@@ -1,9 +1,9 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {SelectionModel} from "@angular/cdk/collections";
 import {ManagerListings} from "./manager-listings.model";
 import {ListingService} from "../services/listing/listing.service";
-
+import { MatPaginator } from '@angular/material/paginator';
 
 
 @Component({
@@ -17,6 +17,7 @@ export class ManagerListingsComponent implements OnInit {
   displayedColumns: string[] = ['song_id', 'file_name', 'song_status', 'attributes'];
   dataSource : MatTableDataSource<ManagerListings>;
   selection = new SelectionModel<ManagerListings>(true, []);
+  @ViewChild('paginator') paginator: MatPaginator | undefined;
 
   constructor(private listingService: ListingService, private changeDetectorRefs: ChangeDetectorRef) {
     this.dataSource = new MatTableDataSource<ManagerListings>();
@@ -76,6 +77,11 @@ export class ManagerListingsComponent implements OnInit {
       newData.push(newEntry);
       this.dataSource.data = newData;
     })
+  }
+
+  ngAfterViewInit() {
+    // @ts-ignore
+    this.dataSource.paginator = this.paginator
   }
 
 }

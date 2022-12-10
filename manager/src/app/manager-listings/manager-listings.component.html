@@ -43,6 +43,6 @@
           (click)="selection.toggle(row)">
       </tr>
     </table>
-
   </div>
+  <mat-paginator #paginator [pageSizeOptions]="[10, 20, 30, 40]" showFirstLastButtons ></mat-paginator>
 </div>
