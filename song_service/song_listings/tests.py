@@ -2,7 +2,7 @@ import json
 
 from django.test import RequestFactory, TestCase
 from song_upload.models import Song
-from .views import RecentSongListingsView
+from .views import RecentSongListingsView, UserSongsListingsView
 
 
 class SongListingsViewTest(TestCase):
