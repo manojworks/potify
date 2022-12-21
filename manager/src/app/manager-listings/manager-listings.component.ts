@@ -1,87 +1,92 @@
-import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
-import {MatTableDataSource} from "@angular/material/table";
-import {SelectionModel} from "@angular/cdk/collections";
-import {ManagerListings} from "./manager-listings.model";
-import {ListingService} from "../services/listing/listing.service";
+import {AfterViewInit, Component, Injectable, OnInit, ViewChild} from '@angular/core';
+import { SelectionModel} from '@angular/cdk/collections';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import {catchError, finalize, merge, tap, throwError} from "rxjs";
+import {ManagerListing} from "./manager-listings.model";
+import {ListingsService} from "../services/listing/listing.service";
+import {MatTable} from "@angular/material/table";
 
 
 @Component({
   selector: 'app-manager-listings',
   templateUrl: './manager-listings.component.html',
-  styleUrls: ['./manager-listings.component.css']
+  styleUrls: ['./manager-listings.component.css'],
+  providers: [ManagerListingsComponent]
 })
 
-export class ManagerListingsComponent implements OnInit {
+@Injectable()
 
-  displayedColumns: string[] = ['song_id', 'file_name', 'song_status', 'attributes'];
-  dataSource : MatTableDataSource<ManagerListings>;
-  selection = new SelectionModel<ManagerListings>(true, []);
-  @ViewChild('paginator') paginator: MatPaginator | undefined;
+export class ManagerListingsComponent implements OnInit, AfterViewInit {
 
-  constructor(private listingService: ListingService, private changeDetectorRefs: ChangeDetectorRef) {
-    this.dataSource = new MatTableDataSource<ManagerListings>();
-  }
+  lds: ManagerListing[] = [];
+  loading = false;
 
-  addASong(newSong: ManagerListings) {
-    this.listingService.addASong(newSong)
-    this.changeDetectorRefs.detectChanges();
-  }
-  /** Whether the number of selected elements matches the total number of rows. */
-  isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected === numRows;
-  }
+  @ViewChild(MatPaginator) paginator :any = MatPaginator;
 
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
-  toggleAllRows() {
-    if (this.isAllSelected()) {
-      this.selection.clear();
-      return;
-    }
+  @ViewChild(MatSort) sort: any = MatSort;
+  @ViewChild(MatTable, {static: false}) listingsTable: MatTable<ManagerListing> | undefined
+  selection = new SelectionModel<ManagerListing>(true, []);
 
-    this.selection.select(...this.dataSource.data);
-  }
+  constructor(private listingService: ListingsService) {}
 
-  /** The label for the checkbox on the passed row */
-  checkboxLabel(row?: ManagerListings): string {
-    if (!row) {
-      return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
-    }
-    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.getSongId() + 1}`;
-  }
+  displayedColumns = ['file_name', "state", 'attr'];
 
+  ngOnInit() {
 
-
-  ngOnInit(): void {
-
-    console.log("On page init listings component ")
-    this.listingService.listRecent().subscribe(listingsData => {
-      const newData = [ ...this.dataSource.data ];
-      for (let key in listingsData){
-        let entry = listingsData[key]
-        let newEntry = new ManagerListings(entry['song_id'], entry['file_name'], entry['song_status'], entry['attributes'])
-        newData.push(newEntry);
-      }
-        this.dataSource.data = newData
-      })
-
-
-
-
-    this.listingService.listingsObservable.subscribe(newManagerListing => {
-      console.log("On page init subscribe observable")
-      let newEntry = new ManagerListings(newManagerListing.getSongId(), newManagerListing.getSongFileName(), 1, newManagerListing.getSongAttributes())
-      const newData = [ ...this.dataSource.data ];
-      newData.push(newEntry);
-      this.dataSource.data = newData;
+    this.listingService.getCurrentListings().subscribe(res => {
+      this.lds = res
+      this.listingsTable?.renderRows()
     })
+
+    this.listingService.listRecentSongs('', 'asc', 0, 3).subscribe();
+
+  }
+
+  listRecentSongs() {
+    this.loading = true
+    this.listingService.listRecentSongs().pipe(
+      tap((listings: ManagerListing[]) => {
+        this.listingsTable?.renderRows()
+      }),
+      catchError(err => {
+        console.log("Error loading recent listings", err);
+        alert("Error loading recent listings.");
+        return throwError(err);
+
+      }),
+      finalize(() => {this.loading = false
+        this.listingsTable?.renderRows()
+      })
+    ).subscribe(res => this.lds = res)
+  }
+
+  listByCategory(cat: string) {
+    this.loading = true
+    this.listingService.listByCategory(cat).pipe(
+      tap((listings: ManagerListing[]) => {
+        this.listingsTable?.renderRows()
+      }),
+      catchError(err => {
+        console.log("Error loading listings by category ", err);
+        return throwError(err);
+      }),
+      finalize(() => this.loading = false)
+    ).subscribe()
+  }
+
+  addASong(newSong: ManagerListing) {
+    this.listingService.addASong(newSong)
+    this.listingsTable?.renderRows()
   }
 
   ngAfterViewInit() {
-    // @ts-ignore
-    this.dataSource.paginator = this.paginator
-  }
+    this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 
+    merge(this.sort.sortChange, this.paginator.page)
+      .pipe(
+        tap(() => this.listRecentSongs())
+      )
+      .subscribe();
+  }
 }

@@ -1,48 +1,39 @@
 <div class="main">
   <div class="container-fluid">
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
-      <!-- Checkbox Column -->
-      <ng-container matColumnDef="song_id">
-        <th mat-header-cell *matHeaderCellDef>
-          <mat-checkbox (change)="$event ? toggleAllRows() : null"
-                        [checked]="selection.hasValue() && isAllSelected()"
-                        [indeterminate]="selection.hasValue() && !isAllSelected()"
-                        [aria-label]="checkboxLabel()">
-          </mat-checkbox>
-        </th>
-        <td mat-cell *matCellDef="let row">
-          <mat-checkbox (click)="$event.stopPropagation()"
-                        (change)="$event ? selection.toggle(row) : null"
-                        [checked]="selection.isSelected(row)"
-                        [aria-label]="checkboxLabel(row)">
-          </mat-checkbox>
-        </td>
+
+    <table #listingsTable mat-table class="mat-elevation-z8"
+           matSort matSortDisableClear matSortActive="file_name" matSortDirection="asc"
+           [dataSource]="lds">
+
+      <ng-container matColumnDef="file_name" sticky>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>File Name</th>
+        <td mat-cell *matCellDef="let listing">{{listing.file_name}}</td>
       </ng-container>
 
-      <!-- Title Column -->
-      <ng-container matColumnDef="file_name">
-        <th mat-header-cell *matHeaderCellDef> Title </th>
-        <td mat-cell *matCellDef="let element"> {{element.getSongFileName()}} </td>
+      <ng-container matColumnDef="state">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>State</th>
+        <td mat-cell *matCellDef="let listing">{{listing.state}}</td>
       </ng-container>
 
-      <!-- Status Column -->
-      <ng-container matColumnDef="song_status">
-        <th mat-header-cell *matHeaderCellDef> Status </th>
-        <td mat-cell *matCellDef="let element"> {{element.getSongStatus()}} </td>
+      <ng-container matColumnDef="attr">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>State</th>
+        <td mat-cell *matCellDef="let listing">{{listing.attr}}</td>
       </ng-container>
 
-      <!-- Attributes Column -->
-      <ng-container matColumnDef="attributes">
-        <th mat-header-cell *matHeaderCellDef> Attributes </th>
-        <td mat-cell *matCellDef="let element"> {{element.getSongAttributes()}} </td>
-      </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"
-          (click)="selection.toggle(row)">
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky:true"></tr>
+
+      <tr mat-row
+          *matRowDef="let listing;columns:displayedColumns">
       </tr>
+
     </table>
+    <mat-paginator class="mat-elevation-z8"
+                   [length]="lds.length"
+                   [pageSize]="10"
+                   [pageSizeOptions]="[10, 20, 30]">
+    </mat-paginator>
   </div>
-  <mat-paginator #paginator [pageSizeOptions]="[10, 20, 30, 40]" showFirstLastButtons ></mat-paginator>
+
 </div>

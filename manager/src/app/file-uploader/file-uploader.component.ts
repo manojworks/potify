@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {UploadFileService} from "src/app/services/upload-file/upload-file.service"
-import {ManagerListings} from "../manager-listings/manager-listings.model";
-import {ManagerListingsComponent} from "../manager-listings/manager-listings.component";
+import {ManagerListing} from "../manager-listings/manager-listings.model";
 import { Injectable } from '@angular/core';
+import {ListingsService} from "../services/listing/listing.service";
 
 
 export interface IUploadResponse {
@@ -20,7 +20,7 @@ export interface IUploadResponse {
   selector: 'app-file-uploader',
   templateUrl: './file-uploader.component.html',
   styleUrls: ['./file-uploader.component.css'],
-  providers: [ManagerListingsComponent],
+  providers: [ListingsService],
 })
 
 export class FileUploaderComponent implements OnInit {
@@ -29,19 +29,22 @@ export class FileUploaderComponent implements OnInit {
 
   private uploadResult: IUploadResponse | undefined
 
-  constructor(private uploadService: UploadFileService, private listingComponent: ManagerListingsComponent) { }
+  constructor(private uploadService: UploadFileService, private listingService: ListingsService) { }
 
   ngOnInit(): void {
   }
 
   fileUpload() {
     if (this.selectedFiles) {
-      for (var ind = 0; ind < this.selectedFiles.length; ind++) {
+      for (let ind = 0; ind < this.selectedFiles.length; ind++) {
         console.log(this.selectedFiles[ind])
         this.uploadService.upload(this.selectedFiles[ind]).subscribe( resp => {
             this.uploadResult = <IUploadResponse>resp
-            let newSong = new ManagerListings(this.uploadResult.id, this.uploadResult.original_file_name, this.uploadResult.status, <string[]>[])
-            this.listingComponent.addASong(newSong)
+            let newSong: ManagerListing = {id: this.uploadResult.id,
+                                          file_name: this.uploadResult.original_file_name,
+                                          state: this.uploadResult.status,
+                                          attr: []}
+            this.listingService.addASong(newSong)
           }
         )
       }
