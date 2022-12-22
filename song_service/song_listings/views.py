@@ -11,7 +11,19 @@ logger = logging.getLogger(__name__)
 class RecentSongListingsView(APIView):
 
     def get(self, request, format=None):
-        recent_uploaded_songs = Song.objects.filter(status=Song.SongState.UPLOADED).order_by('created_on')
+        logger.debug(f"GET recent songs query params {request.query_params}")
+
+        page_num = int(request.GET.get('pageNumber', '0'))
+        page_size = int(request.GET.get('pageSize', 10))
+        sort_order = request.query_params.get('sortOrder', 'asc')
+        if sort_order == 'asc':
+            sort_order_by = 'created_on'
+        else:
+            sort_order_by = '-created_on'
+
+        lb = page_num * page_size
+        ub = lb + page_size
+        recent_uploaded_songs = Song.objects.filter(status=Song.SongState.UPLOADED).order_by(sort_order_by)[lb:ub]
         response_dict = {"recent": []}
         for s in recent_uploaded_songs.iterator():
             val = {"id": s.uuid,
