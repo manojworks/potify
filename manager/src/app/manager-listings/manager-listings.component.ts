@@ -45,13 +45,15 @@ export class ManagerListingsComponent implements OnInit, AfterViewInit {
       this.listingsTable?.renderRows()
     })
 
-    this.listingService.listRecentSongs('', 'asc', 0, 10).subscribe();
+    this.listingService.listRecentSongs('asc', 0, 10).subscribe();
 
   }
 
   listRecentSongs() {
     this.loading = true
-    this.listingService.listRecentSongs().pipe(
+    this.listingService.listRecentSongs(this.sort?.direction ?? "asc",
+      this.paginator?.pageIndex ?? 0,
+      this.paginator?.pageSize ?? 10).pipe(
       tap((listings: ManagerListings) => {
         this.listingsTable?.renderRows()
       }),
@@ -64,11 +66,15 @@ export class ManagerListingsComponent implements OnInit, AfterViewInit {
       finalize(() => {this.loading = false
         this.listingsTable?.renderRows()
       })
-    ).subscribe(res => this.lds = res)
+    ).subscribe(res => {
+      //this.lds = res
+      //this.listingsTable.paginator = this.paginator
+    })
   }
 
   listByCategory(cat: string) {
     this.loading = true
+    // TODO: add more params for sort and pagination
     this.listingService.listByCategory(cat).pipe(
       tap((listings: ManagerListings) => {
         this.listingsTable?.renderRows()
