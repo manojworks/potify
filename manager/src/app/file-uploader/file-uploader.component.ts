@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {UploadFileService} from "src/app/services/upload-file/upload-file.service"
-import {ManagerListing} from "../manager-listings/manager-listings.model";
+import {Listing, ManagerListings} from "../manager-listings/manager-listings.model";
 import { Injectable } from '@angular/core';
 import {ListingsService} from "../services/listing/listing.service";
 
@@ -40,7 +40,7 @@ export class FileUploaderComponent implements OnInit {
         console.log(this.selectedFiles[ind])
         this.uploadService.upload(this.selectedFiles[ind]).subscribe( resp => {
             this.uploadResult = <IUploadResponse>resp
-            let newSong: ManagerListing = {id: this.uploadResult.id,
+            let newSong: Listing = {id: this.uploadResult.id,
                                           file_name: this.uploadResult.original_file_name,
                                           state: this.uploadResult.status,
                                           attr: []}

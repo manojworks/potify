@@ -3,7 +3,7 @@ import { SelectionModel} from '@angular/cdk/collections';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import {catchError, finalize, merge, tap, throwError} from "rxjs";
-import {ManagerListing} from "./manager-listings.model";
+import {emptyManagerListing, ManagerListings} from "./manager-listings.model";
 import {ListingsService} from "../services/listing/listing.service";
 import {MatTable} from "@angular/material/table";
 
@@ -11,22 +11,28 @@ import {MatTable} from "@angular/material/table";
 @Component({
   selector: 'app-manager-listings',
   templateUrl: './manager-listings.component.html',
-  styleUrls: ['./manager-listings.component.css'],
-  providers: [ManagerListingsComponent]
+  styleUrls: ['./manager-listings.component.css']
 })
 
 @Injectable()
 
 export class ManagerListingsComponent implements OnInit, AfterViewInit {
 
-  lds: ManagerListing[] = [];
+  lds: ManagerListings = emptyManagerListing();
   loading = false;
 
-  @ViewChild(MatPaginator) paginator :any = MatPaginator;
+  @ViewChild(MatPaginator, {static: false}) paginator :any = MatPaginator;
 
-  @ViewChild(MatSort) sort: any = MatSort;
-  @ViewChild(MatTable, {static: false}) listingsTable: MatTable<ManagerListing> | undefined
-  selection = new SelectionModel<ManagerListing>(true, []);
+  // @ViewChild(MatPaginator, {static: false})
+  // set paginator(value: MatPaginator) {
+  //   if (this.lds){
+  //     this.paginator = value;
+  //   }
+  // }
+
+  @ViewChild(MatSort, {static: false}) sort: any = MatSort;
+  @ViewChild(MatTable, {static: false}) listingsTable: MatTable<ManagerListings> | undefined
+  selection = new SelectionModel<ManagerListings>(true, []);
 
   constructor(private listingService: ListingsService) {}
 
@@ -39,14 +45,14 @@ export class ManagerListingsComponent implements OnInit, AfterViewInit {
       this.listingsTable?.renderRows()
     })
 
-    this.listingService.listRecentSongs('', 'asc', 0, 3).subscribe();
+    this.listingService.listRecentSongs('', 'asc', 0, 10).subscribe();
 
   }
 
   listRecentSongs() {
     this.loading = true
     this.listingService.listRecentSongs().pipe(
-      tap((listings: ManagerListing[]) => {
+      tap((listings: ManagerListings) => {
         this.listingsTable?.renderRows()
       }),
       catchError(err => {
@@ -64,7 +70,7 @@ export class ManagerListingsComponent implements OnInit, AfterViewInit {
   listByCategory(cat: string) {
     this.loading = true
     this.listingService.listByCategory(cat).pipe(
-      tap((listings: ManagerListing[]) => {
+      tap((listings: ManagerListings) => {
         this.listingsTable?.renderRows()
       }),
       catchError(err => {
@@ -75,10 +81,10 @@ export class ManagerListingsComponent implements OnInit, AfterViewInit {
     ).subscribe()
   }
 
-  addASong(newSong: ManagerListing) {
-    this.listingService.addASong(newSong)
-    this.listingsTable?.renderRows()
-  }
+  // addASong(newSong: ManagerListing) {
+  //   this.listingService.addASong(newSong)
+  //   this.listingsTable?.renderRows()
+  // }
 
   ngAfterViewInit() {
     this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);

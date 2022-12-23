@@ -1,14 +1,27 @@
-export interface ManagerListing {
+export interface Listing {
   id: string,
   file_name: string;
   state:number;
   attr: [];
-  //listingsCount:number;
 }
-export const emptyManagerListing = (): ManagerListing => ({
+
+export interface ManagerListings {
+  count: number;
+  data: Listing[]
+}
+
+
+
+export const emptyListing = () : Listing => ({
   id: 'empty',
   file_name: 'empty',
   state: 0,
-  //listingsCount: 0,
-  attr: [],
-});
+  attr: []
+})
+
+export const emptyManagerListing = (): ManagerListings => {
+  return ({
+    count: 0,
+    data: [emptyListing()]
+  });
+};

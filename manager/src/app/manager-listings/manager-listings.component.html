@@ -4,7 +4,7 @@
 
     <table #listingsTable mat-table class="mat-elevation-z8"
            matSort matSortDisableClear matSortActive="file_name" matSortDirection="asc"
-           [dataSource]="lds">
+           [dataSource]="lds.data">
 
       <ng-container matColumnDef="file_name" sticky>
         <th mat-header-cell *matHeaderCellDef mat-sort-header>File Name</th>
@@ -30,7 +30,7 @@
 
     </table>
     <mat-paginator class="mat-elevation-z8"
-                   [length]="lds.length"
+                   [length]="lds.count"
                    [pageSize]="10"
                    [pageSizeOptions]="[10, 20, 30]">
     </mat-paginator>
