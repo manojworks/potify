@@ -27,12 +27,11 @@ export class ListingsService {
     this.listingsSubject.complete();
   }
 
-  listRecentSongs(filter = '', sortOrder = 'asc',
+  listRecentSongs(sortOrder = 'asc',
                   pageNumber = 0, pageSize = 10): Observable<any> {
     let recentURL = this.baseUrl + "recent/"
     return this.http.get(recentURL, {
       params: new HttpParams()
-        .set('filter', filter)
         .set('sortOrder', sortOrder)
         .set('pageNumber', pageNumber.toString())
         .set('pageSize', pageSize.toString())
